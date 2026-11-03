@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1A365D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="B-SIMEDIS">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>B-SIMEDIS | Klinik Pusdik Brimob</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ===== TOKEN ===== */
+:root{
+  --navy:#1A365D; --navy-dark:#12294a; --teal:#0F766E;
+  --bg:#F4F7F6; --white:#FFFFFF; --text:#333333; --muted:#6b7280; --line:#e3e8e6;
+  --red:#DC2626; --amber:#D97706; --green:#16A34A;
+  --red-bg:#fef2f2; --amber-bg:#fffbeb; --green-bg:#f0fdf4;
+  --radius:8px; --shadow:0 1px 3px rgba(26,54,93,.08),0 4px 12px rgba(26,54,93,.06);
+  --card:#fff;--ink:#1A365D;--row-alt:#fafcfb;--row-hover:#eef5f3;--active-bg:#e9f2f1;--overlay:rgba(255,255,255,.75);--chip:#eef2f7;--field-line:#cfd8d5;--sidebar-w:240px; --nav-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+.hidden{display:none!important}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+/* ===== TOMBOL & FORM ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:var(--radius);padding:9px 16px;font-size:14px;font-weight:600;transition:background .15s}
+.btn-primary{background:var(--navy);color:#fff}.btn-primary:hover{background:var(--navy-dark)}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:#0c5f59}
+.btn-ghost{background:var(--card);color:var(--ink);border-color:var(--line)}.btn-ghost:hover{background:var(--bg)}
+.btn-danger{background:var(--card);color:var(--red);border-color:#f3c5c5}.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:13px;font-weight:600;color:var(--ink)}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--field-line);border-radius:var(--radius);font:inherit;background:var(--card);color:var(--text)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px rgba(15,118,110,.15)}
+.field textarea{resize:vertical;min-height:70px}
+.grid-2{display:grid;grid-template-columns:1fr;gap:0 16px}
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.card h3{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:12px}
+
+/* ===== LOGIN ===== */
+#view-login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.login-card{width:100%;max-width:400px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px 28px;border-top:4px solid var(--navy)}
+.login-brand{text-align:center;margin-bottom:24px}
+.login-brand img{width:84px;height:84px;object-fit:contain;margin-bottom:10px}
+.login-brand h1{font-size:22px;color:var(--ink);font-weight:700}
+.login-brand p{font-size:12.5px;color:var(--muted)}
+.alert-error{background:var(--red-bg);color:var(--red);border:1px solid #f3c5c5;border-radius:var(--radius);padding:10px 12px;font-size:13px;margin-bottom:14px}
+
+/* ===== SHELL APLIKASI ===== */
+#view-app{min-height:100vh}
+.sidebar{display:none;position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);background:var(--navy);color:#fff;flex-direction:column;padding:20px 12px;z-index:20}
+.side-brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;border-bottom:1px solid rgba(255,255,255,.14);margin-bottom:14px}
+.side-brand img{width:40px;height:40px;object-fit:contain;background:#fff;border-radius:50%;padding:2px}
+.side-brand b{display:block;font-size:16px;letter-spacing:.3px}
+.side-brand small{font-size:11px;opacity:.7}
+.side-link{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;color:rgba(255,255,255,.78);padding:11px 12px;border-radius:var(--radius);font-size:14px;font-weight:500;text-align:left;margin-bottom:2px}
+.side-link:hover{background:rgba(255,255,255,.08);color:#fff}
+.side-link.active{background:var(--teal);color:#fff}
+.side-user{margin-top:auto;padding:14px 8px 0;border-top:1px solid rgba(255,255,255,.14);font-size:12.5px}
+.side-user b{display:block;font-size:13px}
+.side-user button{margin-top:10px;width:100%;background:rgba(255,255,255,.1);color:#fff;border:0;border-radius:var(--radius);padding:8px}
+.side-user button:hover{background:rgba(255,255,255,.2)}
+
+.topbar{position:sticky;top:0;z-index:15;display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.topbar .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.topbar img{width:30px;height:30px;object-fit:contain;background:#fff;border-radius:50%;padding:2px}
+.topbar button{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:var(--radius);padding:6px 10px;font-size:12px}
+
+.main{padding:16px;padding-bottom:calc(var(--nav-h) + 24px + env(safe-area-inset-bottom,0px))}
+.page-title{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.page-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.page-head .page-title{margin:0}
+
+.bottom-nav{position:fixed;inset:auto 0 0 0;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);display:flex;background:var(--card);border-top:1px solid var(--line);z-index:20}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:0;color:var(--muted);font-size:11px;font-weight:500}
+.nav-item .ico{font-size:19px;line-height:1}
+.nav-item.active{color:var(--teal);font-weight:600}
+
+/* ===== DASHBOARD ===== */
+.stats{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:14px}
+.stat{border-left:4px solid var(--navy)}
+.stat:nth-child(2){border-left-color:var(--teal)}
+.stat:nth-child(3){border-left-color:var(--amber)}
+.stat .label{font-size:12.5px;color:var(--muted);font-weight:500}
+.stat .value{font-size:26px;font-weight:700;color:var(--ink);line-height:1.2;margin-top:4px;word-break:break-word}
+.stat .value.text{font-size:19px}
+.dash-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.chart-box{position:relative;height:250px}
+.notif-group{margin-bottom:16px}
+.notif-group h4{font-size:13px;font-weight:600;margin-bottom:8px}
+.notif-item{border-radius:var(--radius);padding:9px 11px;margin-bottom:6px;font-size:13px;border-left:4px solid}
+.notif-item small{display:block;opacity:.85;font-size:12px}
+.notif-warn{background:var(--amber-bg);border-color:var(--amber);color:#92400e}
+.notif-danger{background:var(--red-bg);border-color:var(--red);color:#991b1b}
+.notif-empty{color:var(--muted);font-size:13px;padding:6px 0}
+
+/* ===== INPUT REKAM MEDIS ===== */
+.drug-row{display:grid;grid-template-columns:76px 1fr 38px;gap:8px;align-items:start;margin-bottom:10px}
+.drug-row .ac-wrap{grid-column:1/-1}
+.drug-row input{padding:10px;border:1px solid var(--field-line);border-radius:var(--radius);font:inherit;width:100%}
+.ac-wrap{position:relative}
+.ac-list{position:absolute;top:100%;left:0;right:0;z-index:30;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);max-height:220px;overflow-y:auto;margin-top:2px}
+.ac-item{padding:9px 12px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.ac-item:hover{background:var(--bg)}
+.ac-item small{color:var(--muted);white-space:nowrap}
+.ac-item.habis{opacity:.5;pointer-events:none}
+.drug-remove{height:40px;border:1px solid #f3c5c5;background:var(--card);color:var(--red);border-radius:var(--radius);font-size:16px}
+.form-actions{display:flex;gap:10px;margin-top:8px}
+.form-actions .btn{flex:1}
+
+/* ===== TABEL ===== */
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.filters .field{margin:0}
+.filters .span-2{grid-column:1/-1}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:var(--card);min-width:760px}
+thead th{background:var(--navy);color:#fff;text-align:left;font-size:12.5px;font-weight:600;padding:11px 12px;white-space:nowrap}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+tbody tr:nth-child(even){background:var(--row-alt)}
+tbody tr:hover{background:var(--row-hover)}
+.td-actions{display:flex;gap:6px;white-space:nowrap}
+.empty-row{text-align:center;color:var(--muted);padding:28px!important}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.badge-ok{background:var(--green-bg);color:var(--green)}
+.badge-warn{background:var(--amber-bg);color:var(--amber)}
+.badge-danger{background:var(--red-bg);color:var(--red)}
+
+.link-btn{background:none;border:0;color:var(--teal);font-size:12px;font-weight:600;margin-left:8px;text-decoration:underline}
+.ref-add{display:flex;gap:8px;margin-bottom:12px}
+.ref-add input,.ref-edit-input{flex:1;min-width:0;padding:9px 12px;border:1px solid var(--field-line);border-radius:var(--radius);font:inherit}
+.ref-list{max-height:48vh;overflow-y:auto;border:1px solid var(--line);border-radius:var(--radius)}
+.ref-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line)}
+.ref-item:last-child{border-bottom:0}
+.ref-name{flex:1;font-size:13px;word-break:break-word}
+
+/* ===== MODAL, LOADING, TOAST ===== */
+.modal{position:fixed;inset:0;background:rgba(15,30,50,.5);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.modal-box{background:var(--card);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;border-radius:12px 12px 0 0;padding:20px}
+.modal-box h3{font-size:16px;color:var(--ink);margin-bottom:14px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+
+#loading{position:fixed;inset:0;background:var(--overlay);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--ink);font-weight:600}
+.spinner{width:42px;height:42px;border:4px solid #d5e2de;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:2s}}
+
+#toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:var(--radius);box-shadow:var(--shadow);font-size:13px;z-index:90;max-width:90vw}
+#toast.error{background:var(--red)}
+
+/* ===== DESKTOP ===== */
+@media (min-width:900px){
+  .sidebar{display:flex}
+  .topbar,.bottom-nav{display:none}
+  .main{margin-left:var(--sidebar-w);padding:28px 32px}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .dash-grid{grid-template-columns:1fr 1fr 320px;align-items:start}
+  .grid-2{grid-template-columns:1fr 1fr}
+  .filters{grid-template-columns:200px 200px 240px 1fr}
+  .filters .span-2{grid-column:auto}
+  .filters .push{display:flex;align-items:flex-end;justify-content:flex-end}
+  .drug-row{grid-template-columns:1fr 90px 190px 38px}
+  .drug-row .ac-wrap{grid-column:auto}
+  .modal{align-items:center}
+  .modal-box{border-radius:12px}
+  #toast{bottom:28px}
+  .page-title{font-size:20px}
+}
+@media (max-width:899px){
+  .field input,.field select,.field textarea,.drug-row input,.ref-add input,.ref-edit-input{font-size:16px}
+  .table-wrap.cards{border:0;overflow:visible}
+  .cards table{min-width:0;background:transparent}
+  .cards thead{display:none}
+  .cards tbody tr,.cards tbody tr:nth-child(even){display:block;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:8px 12px;margin-bottom:10px}
+  .cards tbody td{display:flex;justify-content:space-between;gap:14px;padding:5px 0;border:0;text-align:right;word-break:break-word}
+  .cards tbody td::before{content:attr(data-label);flex:0 0 36%;text-align:left;color:var(--muted);font-weight:600;font-size:12px}
+  .cards tbody td.empty-row{display:block;text-align:center}.cards tbody td.empty-row::before{content:none}
+  .cards .td-actions{justify-content:flex-end;width:100%}
+}
+.admin-only{display:none!important}
+body.is-admin .admin-only{display:flex!important}
+.badge-role{background:var(--chip);color:var(--ink)}
+.m-hero,.home-tiles{display:none}
+.filters>*,.grid-2>*{min-width:0}
+input[type=date]{min-width:0;max-width:100%}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:899px){
+  :root{--nav-h:84px}
+  html{scroll-padding-top:70px}
+  .main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .topbar{box-shadow:none}
+  body:not([data-page="dashboard"]) .topbar{border-radius:0 0 20px 20px}
+  .m-hero{display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--navy) 0%,#245089 100%);color:#fff;margin:-16px -16px 0;padding:10px 20px 78px;border-radius:0 0 30px 30px}
+  .m-hero::before,.m-hero::after{content:"";position:absolute;border-radius:50%;border:16px solid rgba(255,255,255,.07)}
+  .m-hero::before{width:150px;height:150px;right:-40px;top:-30px}
+  .m-hero::after{width:90px;height:90px;right:60px;top:40px;border-width:10px}
+  .m-hero img{width:56px;height:56px;border-radius:50%;background:#fff;padding:3px;object-fit:contain;position:relative;z-index:1}
+  .m-hero div{position:relative;z-index:1}
+  .m-hero b{display:block;font-size:19px;font-weight:700}
+  .m-hero small{display:block;font-size:12px;opacity:.8;margin-top:2px}
+  #page-dashboard .stats{position:relative;z-index:2;margin:-58px 0 0;background:var(--card);border-radius:20px;box-shadow:0 10px 28px rgba(26,54,93,.18);padding:16px;grid-template-columns:1fr 1fr;gap:12px}
+  #page-dashboard .stat{box-shadow:none;border-left:0;padding:0;border-radius:0;background:none}
+  #page-dashboard .stat:first-child{grid-column:1/-1}
+  #page-dashboard .stat:not(:first-child){border-top:1px solid var(--line);padding-top:10px}
+  #page-dashboard .stat .value{font-size:28px}#page-dashboard .stat .value.text{font-size:15px}
+  .home-tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .tile{position:relative;border:0;border-radius:22px;background:linear-gradient(160deg,var(--navy),#23508a);color:#fff;padding:16px 10px;min-height:138px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;box-shadow:0 8px 18px rgba(26,54,93,.24);font-family:inherit}
+  .tile.teal{background:linear-gradient(160deg,var(--teal),#14958b)}
+  .tile:active{transform:scale(.97)}
+  .tile .tic{width:46px;height:46px;border-radius:50%;background:#fff;color:#1A365D;display:flex;align-items:center;justify-content:center}
+  .tile.teal .tic{color:var(--teal)}
+  .tile b{font-size:14px;font-weight:700;line-height:1.25}
+  .tile small{font-size:11px;opacity:.88;line-height:1.3}
+  .tile.wide{grid-column:1/-1;min-height:104px}
+  .tile .tbadge{position:absolute;top:10px;right:12px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .bottom-nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));height:66px;padding:0 6px;border:0;border-radius:33px;box-shadow:0 10px 30px rgba(26,54,93,.25)}
+  .nav-item{gap:3px;border-radius:26px;margin:7px 2px;font-size:11px}
+  .nav-item .ic{width:23px;height:23px}
+  .nav-item.active{color:var(--ink);background:var(--active-bg)}
+  .nav-item.active .ic{color:var(--teal)}
+}
+
+[data-theme="dark"]{--bg:#0e1a2b;--white:#16263f;--card:#16263f;--text:#e3ebf5;--muted:#9db0c6;--line:#2a3f5c;--ink:#dbe8f8;--field-line:#34496a;--row-alt:#122036;--row-hover:#1b3050;--active-bg:#1f3b5c;--overlay:rgba(14,26,43,.8);--chip:#22364f;--red-bg:#3b1d22;--amber-bg:#3a2e14;--green-bg:#133222;--shadow:0 1px 3px rgba(0,0,0,.4),0 6px 16px rgba(0,0,0,.3);color-scheme:dark}
+[data-theme="dark"] .notif-warn{color:#fcd34d}[data-theme="dark"] .notif-danger{color:#fca5a5}
+.drug-row input,.ref-add input,.ref-item input{background:var(--card);color:var(--text)}
+.icon-btn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:var(--bg)}
+.top-actions{display:flex;gap:8px;align-items:center}
+.top-actions .icon-btn{width:36px;height:36px;background:rgba(255,255,255,.14);border:0;color:#fff}
+.desk-tools{display:none;justify-content:flex-end;gap:10px;margin-bottom:12px}
+.page-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.pw-wrap{position:relative}.pw-wrap input{padding-right:46px}
+.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:none;font-size:17px;opacity:.7}
+#view-login{background:linear-gradient(160deg,#12294a 0%,#1A365D 50%,#0F766E 100%)}
+.login-card{border-top:0;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.login-brand img{filter:drop-shadow(0 4px 8px rgba(26,54,93,.25))}
+@media (min-width:900px){.desk-tools{display:flex}}
+@media (max-width:899px){
+  body{font-size:15px}
+  .field label{font-size:14px}
+  .field input,.field select{min-height:48px}
+  .btn{min-height:46px;font-size:15px}
+  .btn-sm{min-height:38px;font-size:13px;padding:6px 14px}
+  .page-title{font-size:21px}
+  .cards tbody td{font-size:14px}
+  .tile b{font-size:15px}.tile small{font-size:12px}
+  .nav-item{font-size:11.5px}
+  .login-card{padding:30px 22px}
+  .page-head{flex-wrap:nowrap;align-items:flex-start}
+  .page-head>div{min-width:0}
+  .page-head .btn{flex:0 0 auto;min-height:44px;padding:8px 16px}
+}
+
+/* ===== TEMA V3: rapi di PC, pas di HP, tidak goyang ===== */
+html{-webkit-text-size-adjust:100%;overscroll-behavior-x:none}
+body{overflow-x:clip;max-width:100%;touch-action:manipulation}
+img,svg,canvas{max-width:100%}
+:root{--radius:12px}
+.page{animation:fadeUp .3s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.page{animation:none}}
+.card{border-radius:16px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(26,54,93,.05),0 8px 24px rgba(26,54,93,.07)}
+.btn{transition:transform .12s,box-shadow .12s,background .15s}.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--navy),#27518a)}
+.btn-teal{background:linear-gradient(135deg,var(--teal),#13958b);box-shadow:0 4px 12px rgba(15,118,110,.25)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.card-head h3{margin:0;font-size:15px}
+.chip{font-size:11.5px;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.donut-wrap{display:flex;flex-direction:column;gap:14px}.chart-box.donut{height:180px}
+.legend{list-style:none;display:grid;gap:8px}.legend li{display:flex;align-items:center;gap:10px;font-size:13px}
+.legend .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.legend .lg-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.legend b{color:var(--ink)}
+.table-wrap{border-radius:14px;background:var(--card)}
+thead th{background:var(--row-alt);color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
+tbody td{padding:12px}
+.sidebar{background:linear-gradient(180deg,#14304f 0%,#1A365D 55%,#12294a 100%)}
+.side-link{border-radius:12px;padding:12px 14px}.side-link .ic{width:20px;height:20px;flex:0 0 auto}
+.side-link.active{background:linear-gradient(135deg,var(--teal),#13958b);box-shadow:0 6px 16px rgba(15,118,110,.35)}
+.stat-ic{display:none}
+#toast{max-width:calc(100vw - 24px)}
+@media (min-width:900px){
+  .page{max-width:1280px;margin-left:auto;margin-right:auto}
+  .desk-tools{display:flex;justify-content:space-between;align-items:center;max-width:1280px;margin:0 auto 14px}
+  .desk-date{font-size:13px;color:var(--muted);font-weight:500}
+  .desk-tools{justify-content:flex-start}.desk-date+.icon-btn{margin-left:auto}
+  .stats{gap:16px}
+  .stat{position:relative;padding:20px 22px;border-left:0!important;overflow:hidden}
+  .stat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--teal))}
+  .stat-ic{display:flex;position:absolute;top:18px;right:18px;width:42px;height:42px;border-radius:12px;align-items:center;justify-content:center;background:var(--active-bg);color:var(--teal)}
+  .stat .value{font-size:32px}.stat .value.text{font-size:22px}
+  .dash-grid{grid-template-columns:repeat(12,1fr);gap:16px;align-items:stretch}
+  .c-tren,.c-notif{grid-column:span 12}.c-kel,.c-dik{grid-column:span 6}
+  .chart-box{height:270px}.chart-box.donut{height:200px}
+}
+@media (min-width:1200px){.c-tren,.c-dik{grid-column:span 8}.c-kel,.c-notif{grid-column:span 4}}
+@media (max-width:899px){
+  body{font-size:14px}
+  .main{padding:14px 14px calc(92px + env(safe-area-inset-bottom,0px))}
+  .m-hero{margin:-14px -14px 0;padding:6px 18px 70px}.m-hero b{font-size:18px}
+  .card{padding:14px}
+  .field input,.field select,.field textarea,.drug-row input,.ref-add input,.ref-item input{font-size:16px}
+  .field input,.field select{min-height:44px}
+  .field label{font-size:13px}
+  .btn{min-height:42px;font-size:14px}.btn-sm{min-height:36px;font-size:13px;padding:5px 12px}
+  .page-title{font-size:19px}
+  .tile{min-height:116px;padding:14px 8px;border-radius:20px}.tile .tic{width:42px;height:42px}.tile b{font-size:14px}.tile small{font-size:11px}
+  #page-dashboard .stat .value{font-size:26px}
+  .chart-box{height:210px}.chart-box.donut{height:170px}
+  .bottom-nav{height:62px}.nav-item{font-size:11px}
+  .cards tbody td{font-size:13.5px}
+  .modal-box{max-width:100%}
+  #page-dashboard .stats .stat{border:0;box-shadow:none;border-radius:0}
+  #page-dashboard .stats .stat:not(:first-child){border-top:1px solid var(--line)}
+}
+</style>
+<script>
+var LOGO_ID='1R__y4EsEzqcbWX6zDeS46H_2R6GF9PXj';
+var LOGO_ALT=['https://drive.google.com/thumbnail?id='+LOGO_ID+'&sz=w400','https://lh3.googleusercontent.com/d/'+LOGO_ID+'=w400','https://drive.google.com/uc?export=view&id='+LOGO_ID];
+function logoFallback(img){var i=+(img.dataset.try||0);if(i<LOGO_ALT.length){img.dataset.try=i+1;img.src=LOGO_ALT[i];}else{img.style.display='none';}}
+/* localStorage aman: tetap jalan walau browser memblokir penyimpanan */
+var MEM={};
+var store={
+  get:function(k){try{return localStorage.getItem(k);}catch(e){return MEM[k]||null;}},
+  set:function(k,v){try{localStorage.setItem(k,v);}catch(e){MEM[k]=v;}},
+  del:function(k){try{localStorage.removeItem(k);}catch(e){} delete MEM[k];}
+};
+document.documentElement.dataset.theme = store.get('bsimedis_theme') || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+</script>
+</head>
+<body>
+
+<!-- ===== LOADING & TOAST ===== -->
+<div id="loading" class="hidden"><div class="spinner"></div><span id="loading-text">Memuat data...</span></div>
+<div id="toast" class="hidden"></div>
+
+<!-- ===== HALAMAN LOGIN ===== -->
+<section id="view-login" class="hidden">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="logo.png" onerror="logoFallback(this)" alt="Logo Brimob">
+      <h1>B-SIMEDIS</h1>
+      <p>Sistem Informasi Medis Siswa<br>Klinik Pusdik Brimob</p>
+    </div>
+    <div id="login-error" class="alert-error hidden"></div>
+    <div class="field"><label for="login-user">Username</label><input id="login-user" type="text" autocomplete="username"></div>
+    <div class="field"><label for="login-pass">Password</label><div class="pw-wrap"><input id="login-pass" type="password" autocomplete="current-password"><button type="button" class="pw-eye" data-eye="login-pass" aria-label="Tampilkan password">👁</button></div></div>
+    <button id="btn-login" class="btn btn-primary" style="width:100%">Masuk</button>
+    <button id="btn-install" class="btn btn-ghost hidden" style="width:100%;margin-top:10px">📲 Pasang Aplikasi di HP</button>
+  </div>
+</section>
+
+<!-- ===== APLIKASI UTAMA ===== -->
+<section id="view-app" class="hidden">
+
+  <!-- Sidebar (desktop) -->
+  <aside class="sidebar">
+    <div class="side-brand">
+      <img src="logo.png" onerror="logoFallback(this)" alt="Logo">
+      <div><b>B-SIMEDIS</b><small>Klinik Pusdik Brimob</small></div>
+    </div>
+    <button class="side-link active" data-page="dashboard"><svg class="ic"><use href="#i-home"/></svg>Dashboard</button>
+    <button class="side-link" data-page="input"><svg class="ic"><use href="#i-input"/></svg>Input Rekam Medis</button>
+    <button class="side-link" data-page="riwayat"><svg class="ic"><use href="#i-list"/></svg>Riwayat Pasien</button>
+    <button class="side-link" data-page="stok"><svg class="ic"><use href="#i-pill"/></svg>Data Stok Obat</button>
+    <button class="side-link admin-only" data-page="akun"><svg class="ic"><use href="#i-user"/></svg>Kelola Akun</button>
+    <div class="side-user">
+      <b id="side-nama">-</b><span id="side-role">Petugas Jaga</span>
+      <button class="btn-logout">Keluar</button>
+    </div>
+  </aside>
+
+  <!-- Topbar (mobile) -->
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo.png" onerror="logoFallback(this)" alt="Logo">B-SIMEDIS
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" data-act="theme" aria-label="Ganti tema"><svg class="ic"><use href="#i-moon"/></svg></button>
+      <button class="icon-btn" data-act="refresh" aria-label="Muat ulang data"><svg class="ic"><use href="#i-refresh"/></svg></button>
+      <button class="btn-logout">Keluar</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="desk-tools">
+      <span class="desk-date" id="desk-date"></span>
+      <button class="icon-btn" data-act="theme" aria-label="Ganti tema"><svg class="ic"><use href="#i-moon"/></svg></button>
+      <button class="icon-btn" data-act="refresh" aria-label="Muat ulang data"><svg class="ic"><use href="#i-refresh"/></svg></button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page">
+      <div class="m-hero">
+        <img src="logo.png" onerror="logoFallback(this)" alt="Logo">
+        <div><b id="hero-nama">Halo</b><small id="hero-sub">Klinik Pusdik Brimob</small></div>
+      </div>
+      <div class="stats">
+        <div class="card stat"><span class="stat-ic"><svg class="ic"><use href="#i-users"/></svg></span><div class="label">Total Pasien Hari Ini</div><div class="value" id="stat-total">0</div></div>
+        <div class="card stat"><span class="stat-ic"><svg class="ic"><use href="#i-flag"/></svg></span><div class="label">Dikbang Terbanyak</div><div class="value text" id="stat-dikbang">-</div></div>
+        <div class="card stat"><span class="stat-ic"><svg class="ic"><use href="#i-pulse"/></svg></span><div class="label">Keluhan Terbanyak</div><div class="value text" id="stat-keluhan">-</div></div>
+      </div>
+      <div class="home-tiles">
+        <button class="tile" data-page="input"><span class="tic"><svg class="ic"><use href="#i-input"/></svg></span><b>Input Rekam Medis</b><small>catat kunjungan dan terapi siswa</small></button>
+        <button class="tile teal" data-page="riwayat"><span class="tic"><svg class="ic"><use href="#i-list"/></svg></span><b>Riwayat Pasien</b><small>cari dan unduh laporan</small></button>
+        <button class="tile teal" data-page="stok"><span class="tic"><svg class="ic"><use href="#i-pill"/></svg></span><b>Data Stok Obat</b><small>stok dan tanggal expired</small></button>
+        <button class="tile" data-scroll="notif-card"><span class="tic"><svg class="ic"><use href="#i-bell"/></svg></span><b>Peringatan Stok</b><small>menipis dan hampir expired</small><span class="tbadge" id="tile-alert">0</span></button>
+        <button class="tile wide admin-only" data-page="akun"><span class="tic"><svg class="ic"><use href="#i-user"/></svg></span><b>Kelola Akun</b><small>tambah dan hapus akun petugas</small></button>
+      </div>
+      <div class="dash-grid">
+        <div class="card c-tren"><div class="card-head"><h3>Tren Kunjungan</h3><span class="chip">7 hari terakhir</span></div><div class="chart-box"><canvas id="chart-tren"></canvas></div></div>
+        <div class="card c-kel"><div class="card-head"><h3>Keluhan Teratas</h3><span class="chip">30 hari</span></div><div class="donut-wrap"><div class="chart-box donut"><canvas id="chart-keluhan"></canvas></div><ul id="legend-keluhan" class="legend"></ul></div></div>
+        <div class="card c-dik"><div class="card-head"><h3>Kunjungan per Dikbang</h3><span class="chip">30 hari</span></div><div class="chart-box"><canvas id="chart-dikbang"></canvas></div></div>
+        <div class="card c-notif">
+          <h3 id="notif-card">Notifikasi Stok</h3>
+          <div class="notif-group"><h4 style="color:var(--amber)">Stok Menipis</h4><div id="notif-stok"></div></div>
+          <div class="notif-group"><h4 style="color:var(--red)">Hampir Expired</h4><div id="notif-expired"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INPUT REKAM MEDIS -->
+    <div id="page-input" class="page hidden">
+      <h2 class="page-title">Input Rekam Medis</h2>
+      <div class="card">
+        <div class="grid-2">
+          <div class="field"><label>Petugas Jaga</label><input id="in-petugas" type="text" readonly></div>
+          <div class="field"><label for="in-nama">Nama Siswa</label><input id="in-nama" type="text"></div>
+          <div class="field"><label for="in-nosis">Nosis / Pleton / Kompi</label><input id="in-nosis" type="text"></div>
+          <div class="field"><label for="in-dikbang">Dikbang <button type="button" class="link-btn" data-kelola="dikbang">Kelola</button></label><input id="in-dikbang" type="text" list="dl-dikbang" placeholder="Pilih atau ketik Dikbang" autocomplete="off"><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></symbol>
+<symbol id="i-input" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6M9 14h6"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v2H9z"/><path d="M9 11h6M9 15h6"/></symbol>
+<symbol id="i-pill" viewBox="0 0 24 24"><path d="M10.5 20.5a5 5 0 0 1-7-7l9-9a5 5 0 0 1 7 7z"/><path d="M8.5 8.5l7 7"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 13a9 9 0 1 1-10-10 7 7 0 0 0 10 10z"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4L4 9"/><path d="M4 4v5h5"/><path d="M4 13a8 8 0 0 0 14 4l2-2"/><path d="M20 20v-5h-5"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 3-5.5 6.5-5.5s6.5 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17.5 14.5c2.6.2 4 1.8 4 4.5"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 5h12l-2 4 2 4H5"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 17v-6a6 6 0 0 1 12 0v6l2 2H4z"/><path d="M10 21h4"/></symbol>
+</defs></svg>
+<datalist id="dl-dikbang"></datalist></div>
+          <div class="field"><label for="in-asal">Asal Pengiriman <button type="button" class="link-btn" data-kelola="asal">Kelola</button></label><input id="in-asal" type="text" list="dl-asal" placeholder="Pilih atau ketik asal pengiriman" autocomplete="off"><datalist id="dl-asal"></datalist></div>
+          <div class="field"><label for="in-keluhan">Keluhan</label><input id="in-keluhan" type="text"></div>
+        </div>
+        <div class="field"><label for="in-diagnosa">Diagnosa</label><input id="in-diagnosa" type="text"></div>
+
+        <div class="field">
+          <label>Therapi</label>
+          <div id="drug-list"></div>
+          <button type="button" id="btn-add-drug" class="btn btn-ghost btn-sm" style="align-self:flex-start">+ Tambah Obat</button>
+        </div>
+
+        <div class="field"><label for="in-ket">Keterangan</label><textarea id="in-ket"></textarea></div>
+        <div class="form-actions">
+          <button type="button" id="btn-reset" class="btn btn-ghost">Kosongkan</button>
+          <button type="button" id="btn-simpan" class="btn btn-teal">Simpan Rekam Medis</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIWAYAT PASIEN -->
+    <div id="page-riwayat" class="page hidden">
+      <h2 class="page-title">Riwayat Pasien</h2>
+      <div class="card" style="margin-bottom:14px">
+        <div class="filters">
+          <div class="field"><label for="f-dari">Dari Tanggal</label><input id="f-dari" type="date"></div>
+          <div class="field"><label for="f-sampai">Sampai Tanggal</label><input id="f-sampai" type="date"></div>
+          <div class="field span-2"><label for="f-dikbang">Dikbang</label><select id="f-dikbang"><option value="">Semua Dikbang</option></select></div>
+          <div class="push span-2"><button id="btn-csv" class="btn btn-teal" style="width:100%">📥 Download CSV/Excel</button></div>
+        </div>
+      </div>
+      <div class="table-wrap cards">
+        <table>
+          <thead><tr><th>Tanggal</th><th>Nama</th><th>Nosis / Pleton / Kompi</th><th>Dikbang</th><th>Keluhan</th><th>Diagnosa</th><th>Therapi</th><th>Petugas</th><th>Aksi</th></tr></thead>
+          <tbody id="tbody-riwayat"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DATA STOK OBAT -->
+    <div id="page-stok" class="page hidden">
+      <div class="page-head">
+        <h2 class="page-title">Data Stok Obat</h2>
+        <button id="btn-obat-masuk" class="btn btn-primary">+ Tambah Obat Masuk</button>
+      </div>
+      <div class="table-wrap cards">
+        <table>
+          <thead><tr><th>Kode</th><th>Nama Obat</th><th>Kategori</th><th>Stok</th><th>Satuan</th><th>Batas Min.</th><th>Tgl Expired</th><th>Status</th></tr></thead>
+          <tbody id="tbody-stok"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- KELOLA AKUN (khusus admin) -->
+    <div id="page-akun" class="page hidden">
+      <div class="page-head">
+        <div><h2 class="page-title" style="margin:0">Kelola Akun</h2><p class="page-sub">Tambah, ubah, ganti password, atau hapus akun petugas</p></div>
+        <button id="btn-akun-add" class="btn btn-teal">+ Tambah</button>
+      </div>
+      <div class="table-wrap cards">
+        <table>
+          <thead><tr><th>Username</th><th>Nama Petugas</th><th>Peran</th><th>Aksi</th></tr></thead>
+          <tbody id="tbody-akun"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom nav (mobile) -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="dashboard"><svg class="ic"><use href="#i-home"/></svg>Beranda</button>
+    <button class="nav-item" data-page="input"><svg class="ic"><use href="#i-input"/></svg>Input</button>
+    <button class="nav-item" data-page="riwayat"><svg class="ic"><use href="#i-list"/></svg>Riwayat</button>
+    <button class="nav-item" data-page="stok"><svg class="ic"><use href="#i-pill"/></svg>Stok</button>
+    <button class="nav-item admin-only" data-page="akun"><svg class="ic"><use href="#i-user"/></svg>Akun</button>
+  </nav>
+</section>
+
+<!-- ===== MODAL EDIT RIWAYAT ===== -->
+<div id="modal-edit" class="modal hidden">
+  <div class="modal-box">
+    <h3>Edit Rekam Medis</h3>
+    <input type="hidden" id="ed-row">
+    <div class="grid-2">
+      <div class="field"><label>Nama Siswa</label><input id="ed-nama" type="text"></div>
+      <div class="field"><label>Nosis / Pleton / Kompi</label><input id="ed-nosis" type="text"></div>
+      <div class="field"><label>Dikbang</label><input id="ed-dikbang" type="text" list="dl-dikbang" autocomplete="off"></div>
+      <div class="field"><label>Asal Pengiriman</label><input id="ed-asal" type="text" list="dl-asal" autocomplete="off"></div>
+    </div>
+    <div class="field"><label>Keluhan</label><input id="ed-keluhan" type="text"></div>
+    <div class="field"><label>Diagnosa</label><input id="ed-diagnosa" type="text"></div>
+    <div class="field"><label>Therapi</label><input id="ed-therapi" type="text"></div>
+    <div class="field"><label>Keterangan</label><textarea id="ed-ket"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close="modal-edit">Batal</button>
+      <button id="btn-edit-simpan" class="btn btn-teal">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL KELOLA DIKBANG / ASAL ===== -->
+<div id="modal-ref" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="ref-title">Kelola</h3>
+    <div class="ref-add"><input id="ref-new" type="text" placeholder="Ketik nama baru"><button id="btn-ref-add" class="btn btn-teal">Tambah</button></div>
+    <div id="ref-list" class="ref-list"></div>
+    <div class="modal-actions"><button class="btn btn-ghost" data-close="modal-ref">Tutup</button></div>
+  </div>
+</div>
+<datalist id="dl-aturan"><option value="3x1"><option value="2x1"><option value="1x1"><option value="3x1/2"><option value="2x1/2"><option value="3x2"><option value="1x1 malam"><option value="Bila perlu"></datalist>
+
+<!-- ===== MODAL AKUN (tambah / edit) ===== -->
+<div id="modal-akun" class="modal hidden">
+  <div class="modal-box">
+    <h3 id="ak-title">Tambah Akun</h3>
+    <div class="field"><label for="ak-user">Username</label><input id="ak-user" type="text" autocomplete="off" autocapitalize="off" placeholder="Tanpa spasi"></div>
+    <div class="field"><label for="ak-pass" id="ak-pass-label">Password</label><div class="pw-wrap"><input id="ak-pass" type="password" autocomplete="new-password"><button type="button" class="pw-eye" data-eye="ak-pass" aria-label="Tampilkan password">👁</button></div></div>
+    <div class="field"><label for="ak-nama">Nama Petugas</label><input id="ak-nama" type="text" placeholder="Mis. Sertu Andi"></div>
+    <div class="field"><label for="ak-role">Peran</label><select id="ak-role"><option value="petugas">Petugas</option><option value="admin">Admin</option></select></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close="modal-akun">Batal</button>
+      <button id="btn-akun-save" class="btn btn-teal">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL OBAT MASUK ===== -->
+<div id="modal-obat" class="modal hidden">
+  <div class="modal-box">
+    <h3>Tambah Obat Masuk</h3>
+    <div class="field"><label>Nama Obat</label>
+      <input id="om-nama" type="text" list="om-datalist" placeholder="Pilih obat lama atau ketik obat baru">
+      <datalist id="om-datalist"></datalist>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label>Kode Obat</label><input id="om-kode" type="text"></div>
+      <div class="field"><label>Kategori</label><input id="om-kategori" type="text"></div>
+      <div class="field"><label>Jumlah Masuk</label><input id="om-jumlah" type="number" min="1"></div>
+      <div class="field"><label>Satuan</label><input id="om-satuan" type="text" placeholder="Tablet / Botol / Strip"></div>
+      <div class="field"><label>Batas Minimal</label><input id="om-min" type="number" min="0"></div>
+      <div class="field"><label>Tanggal Expired</label><input id="om-exp" type="date"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close="modal-obat">Batal</button>
+      <button id="btn-obat-simpan" class="btn btn-primary">Simpan Obat Masuk</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= KONFIGURASI ================= */
+const API_URL = "https://script.google.com/macros/s/AKfycbwzWW1FlNCR3UdQpmqmsiBKE_Ks33KG6rfXKtnJCd6lKuHotyMAvbYD2iquksF2-jeD/exec";
+const LS_KEY = 'bsimedis_session';
+
+let session = null, REF = {dikbang: [], asal: []}, OBAT = [], KUNJ = [], charts = {}, pending = 0;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ================= UTILITAS ================= */
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const parseYmd = s => { const p = String(s).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
+const fmtTgl = s => { if (!s) return '-'; const p = String(s).split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : s; };
+const todayStr = () => ymd(new Date());
+
+function setLoading(on, text) {
+  pending = Math.max(0, pending + (on ? 1 : -1));
+  if (text) $('loading-text').textContent = text;
+  $('loading').classList.toggle('hidden', pending === 0);
+}
+let toastTimer;
+function toast(msg, isErr) {
+  const t = $('toast');
+  t.textContent = msg; t.className = isErr ? 'error' : '';
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), 3500);
+}
+
+async function api(action, payload = {}, silent) {
+  if (!silent) setLoading(true, 'Memproses...');
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(Object.assign({action, token: session && session.token}, payload))
+    });
+    const json = await res.json();
+    if (json.auth) { logout('Sesi berakhir. Silakan login kembali.'); throw new Error('Sesi berakhir.'); }
+    if (!json.ok) throw new Error(json.message || 'Terjadi kesalahan.');
+    return json;
+  } catch (e) {
+    if (e instanceof SyntaxError || e.name === 'TypeError') throw new Error('Gagal terhubung ke server.');
+    throw e;
+  } finally { if (!silent) setLoading(false); }
+}
+
+/* ================= LOGIN & SESI ================= */
+function showLoginErr(msg) { const b = $('login-error'); b.textContent = msg; b.classList.toggle('hidden', !msg); }
+
+async function doLogin() {
+  const u = $('login-user').value.trim(), p = $('login-pass').value;
+  if (!u || !p) return showLoginErr('Username dan password wajib diisi.');
+  showLoginErr('');
+  $('btn-login').disabled = true;
+  try {
+    const r = await api('login', {username: u, password: p});
+    session = {token: r.token, nama: r.nama, role: r.role, username: r.username};
+    store.set(LS_KEY, JSON.stringify(session));
+    $('login-pass').value = '';
+    enterApp();
+  } catch (e) { console.error('Login gagal:', e); showLoginErr(e.message); }
+  $('btn-login').disabled = false;
+}
+
+function logout(msg) {
+  if (session) api('logout', {}, true).catch(() => {});
+  session = null; store.del(LS_KEY); document.body.classList.remove('is-admin');
+  $('view-app').classList.add('hidden');
+  $('view-login').classList.remove('hidden');
+  showLoginErr(typeof msg === 'string' ? msg : '');
+}
+
+function enterApp() {
+  $('view-login').classList.add('hidden');
+  $('view-app').classList.remove('hidden');
+  $('side-nama').textContent = session.nama;
+  document.body.classList.toggle('is-admin', session.role === 'admin');
+  $('side-role').textContent = session.role === 'admin' ? 'Administrator' : 'Petugas Jaga';
+  $('in-petugas').value = session.nama;
+  showPage('dashboard');
+  loadAll();
+}
+
+/* ================= NAVIGASI ================= */
+function showPage(name) {
+  document.body.dataset.page = name;
+  if (name === 'akun' && !(session && session.role === 'admin')) return;
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('hidden', p.id !== 'page-' + name));
+  document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === name));
+  window.scrollTo(0, 0);
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'riwayat') renderRiwayat();
+  if (name === 'stok') renderStok();
+  if (name === 'akun') loadUsers();
+}
+
+/* ================= DATA ================= */
+async function loadAll() {
+  setLoading(true, 'Memuat data...');
+  try {
+    const [ref, obat, kunj] = await Promise.all([api('getRef', {}, true), api('getObat', {}, true), api('getKunjungan', {}, true)]);
+    REF = {dikbang: ref.dikbang, asal: ref.asal}; OBAT = obat.data; KUNJ = kunj.data;
+    applyRef();
+    renderDashboard(); renderRiwayat(); renderStok();
+  } catch (e) { toast(e.message, true); }
+  setLoading(false);
+}
+async function reloadObatKunj() {
+  const [ref, obat, kunj] = await Promise.all([api('getRef', {}, true), api('getObat', {}, true), api('getKunjungan', {}, true)]);
+  REF = {dikbang: ref.dikbang, asal: ref.asal}; OBAT = obat.data; KUNJ = kunj.data;
+  applyRef(); renderDashboard(); renderRiwayat(); renderStok();
+}
+function fillSelect(el, list, placeholder) {
+  el.innerHTML = '<option value="">' + esc(placeholder) + '</option>' + list.map(v => '<option>' + esc(v) + '</option>').join('');
+}
+
+/* ================= DASHBOARD ================= */
+function topCount(arr, n) {
+  const m = {};
+  arr.forEach(v => { const t = String(v || '').trim(); if (!t) return; const k = t.toLowerCase(); (m[k] = m[k] || {label: t, c: 0}).c++; });
+  return Object.values(m).sort((a, b) => b.c - a.c).slice(0, n);
+}
+function expStatus(exp) {
+  if (!exp) return 'ok';
+  const d = parseYmd(exp), now = new Date(); now.setHours(0, 0, 0, 0);
+  if (d < now) return 'expired';
+  const lim = new Date(now); lim.setMonth(lim.getMonth() + 3);
+  return d <= lim ? 'soon' : 'ok';
+}
+
+function renderDashboard() {
+  const today = todayStr();
+  $('stat-total').textContent = KUNJ.filter(k => k.tanggal === today).length;
+
+  const d30 = new Date(); d30.setDate(d30.getDate() - 29);
+  const recent = KUNJ.filter(k => k.tanggal >= ymd(d30));
+  const tDik = topCount(recent.map(k => k.dikbang), 1), tKel = topCount(recent.map(k => k.keluhan), 5);
+  $('stat-dikbang').textContent = tDik.length ? tDik[0].label : '-';
+  $('stat-keluhan').textContent = tKel.length ? tKel[0].label : '-';
+
+  const hari = [], vals = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    hari.push([d.toLocaleDateString('id-ID', {weekday: 'short'}), String(d.getDate())]);
+    vals.push(KUNJ.filter(k => k.tanggal === ymd(d)).length);
+  }
+  const cs = getComputedStyle(document.documentElement), teal = '#0F766E', line = cs.getPropertyValue('--line').trim();
+  const grad = (c, top, bot) => { const a = c.chart.chartArea; if (!a) return top; const g = c.chart.ctx.createLinearGradient(0, a.top, 0, a.bottom); g.addColorStop(0, top); g.addColorStop(1, bot); return g; };
+  const tip = {backgroundColor: '#0f1e33', titleColor: '#fff', bodyColor: '#e5edf7', padding: 10, cornerRadius: 10, displayColors: false};
+  const noBorder = {display: false};
+  drawChart('tren', 'chart-tren', {
+    type: 'line',
+    data: {labels: hari, datasets: [{label: 'Pasien', data: vals, borderColor: teal, borderWidth: 3, fill: true, tension: .4,
+      backgroundColor: c => grad(c, 'rgba(15,118,110,.38)', 'rgba(15,118,110,0)'),
+      pointBackgroundColor: '#fff', pointBorderColor: teal, pointBorderWidth: 2.5, pointRadius: 4, pointHoverRadius: 6}]},
+    options: {responsive: true, maintainAspectRatio: false, layout: {padding: {top: 8, right: 8}},
+      plugins: {legend: {display: false}, tooltip: Object.assign({}, tip, {callbacks: {label: c => c.parsed.y + ' pasien'}})},
+      scales: {x: {grid: {display: false}, border: noBorder}, y: {beginAtZero: true, ticks: {precision: 0, maxTicksLimit: 5}, border: noBorder, grid: {color: line}}}}
+  });
+  const pal = ['#1A365D', '#0F766E', '#3b82a6', '#5eaaa3', '#94a3b8'], totalK = tKel.reduce((s, x) => s + x.c, 0);
+  drawChart('keluhan', 'chart-keluhan', {
+    type: 'doughnut',
+    data: {labels: tKel.map(x => x.label), datasets: [{data: tKel.map(x => x.c), backgroundColor: pal, borderWidth: 3, borderColor: cs.getPropertyValue('--card').trim(), hoverOffset: 6}]},
+    options: {responsive: true, maintainAspectRatio: false, cutout: '72%', plugins: {legend: noBorder, tooltip: Object.assign({}, tip, {callbacks: {label: c => ' ' + c.label + ': ' + c.parsed}})}},
+    plugins: [{id: 'center', afterDraw(ch) {
+      const a = ch.chartArea, x = (a.left + a.right) / 2, y = (a.top + a.bottom) / 2, c = ch.ctx;
+      c.save(); c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillStyle = cs.getPropertyValue('--ink').trim(); c.font = '700 26px Inter, sans-serif'; c.fillText(String(totalK), x, y - 7);
+      c.fillStyle = cs.getPropertyValue('--muted').trim(); c.font = '500 11px Inter, sans-serif'; c.fillText('kasus', x, y + 15); c.restore();
+    }}]
+  });
+  $('legend-keluhan').innerHTML = tKel.length
+    ? tKel.map((x, i) => '<li><span class="dot" style="background:' + pal[i] + '"></span><span class="lg-name">' + esc(x.label) + '</span><b>' + x.c + '</b></li>').join('')
+    : '<li class="notif-empty">Belum ada data.</li>';
+  const tDb = topCount(recent.map(k => k.dikbang), 5);
+  drawChart('dikbang', 'chart-dikbang', {
+    type: 'bar',
+    data: {labels: tDb.map(x => x.label), datasets: [{data: tDb.map(x => x.c), borderRadius: 8, borderSkipped: false, barThickness: 18,
+      backgroundColor: c => { const a = c.chart.chartArea; if (!a) return teal; const g = c.chart.ctx.createLinearGradient(a.left, 0, a.right, 0); g.addColorStop(0, '#1A365D'); g.addColorStop(1, teal); return g; }}]},
+    options: {indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {legend: noBorder, tooltip: Object.assign({}, tip, {callbacks: {label: c => c.parsed.x + ' pasien'}})},
+      scales: {x: {beginAtZero: true, ticks: {precision: 0, maxTicksLimit: 5}, border: noBorder, grid: {color: line}}, y: {grid: {display: false}, border: noBorder}}}
+  });
+  const menipis = OBAT.filter(o => o.stok < o.min);
+  $('notif-stok').innerHTML = menipis.length
+    ? menipis.map(o => '<div class="notif-item notif-warn"><b>' + esc(o.nama) + '</b><small>Sisa ' + o.stok + ' ' + esc(o.satuan) + ' (batas min. ' + o.min + ')</small></div>').join('')
+    : '<div class="notif-empty">Tidak ada stok menipis.</div>';
+  const exp = OBAT.filter(o => o.exp && expStatus(o.exp) !== 'ok').sort((a, b) => a.exp.localeCompare(b.exp));
+  $('notif-expired').innerHTML = exp.length
+    ? exp.map(o => '<div class="notif-item notif-danger"><b>' + esc(o.nama) + '</b><small>' + (expStatus(o.exp) === 'expired' ? 'Sudah expired ' : 'Expired ') + fmtTgl(o.exp) + '</small></div>').join('')
+    : '<div class="notif-empty">Tidak ada obat mendekati expired.</div>';
+}
+function drawChart(key, canvasId, cfg) {
+  if (charts[key]) charts[key].destroy();
+  if (typeof Chart === 'undefined') return;
+  const cs = getComputedStyle(document.documentElement);
+  Chart.defaults.color = cs.getPropertyValue('--muted').trim() || '#6b7280';
+  Chart.defaults.borderColor = cs.getPropertyValue('--line').trim() || '#e3e8e6';
+  charts[key] = new Chart($(canvasId), cfg);
+}
+
+/* ================= INPUT REKAM MEDIS ================= */
+function addDrugRow() {
+  const row = document.createElement('div'); row.className = 'drug-row';
+  row.innerHTML = '<div class="ac-wrap"><input type="text" class="d-nama" placeholder="Cari nama obat..." autocomplete="off"><div class="ac-list hidden"></div></div>' +
+    '<input type="number" class="d-jml" min="1" placeholder="Jml"><input type="text" class="d-aturan" list="dl-aturan" placeholder="Aturan pakai, mis. 3x1" autocomplete="off"><button type="button" class="drug-remove" aria-label="Hapus obat">✕</button>';
+  const inp = row.querySelector('.d-nama'), list = row.querySelector('.ac-list');
+  const render = () => {
+    const q = inp.value.trim().toLowerCase();
+    const m = OBAT.filter(o => o.nama.toLowerCase().includes(q)).slice(0, 30);
+    list.innerHTML = m.length
+      ? m.map(o => '<div class="ac-item ' + (o.stok <= 0 ? 'habis' : '') + '" data-nama="' + esc(o.nama) + '"><span>' + esc(o.nama) + '</span><small>Sisa ' + o.stok + ' ' + esc(o.satuan) + '</small></div>').join('')
+      : '<div class="ac-item habis">Obat tidak ditemukan</div>';
+    list.classList.remove('hidden');
+  };
+  inp.addEventListener('input', render); inp.addEventListener('focus', render);
+  list.addEventListener('mousedown', e => {
+    const it = e.target.closest('.ac-item[data-nama]');
+    if (it) { e.preventDefault(); inp.value = it.dataset.nama; list.classList.add('hidden'); row.querySelector('.d-jml').focus(); }
+  });
+  row.querySelector('.drug-remove').onclick = () => row.remove();
+  $('drug-list').appendChild(row);
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ac-wrap')) document.querySelectorAll('.ac-list').forEach(l => l.classList.add('hidden'));
+});
+
+function resetForm() {
+  ['in-nama', 'in-nosis', 'in-keluhan', 'in-diagnosa', 'in-ket'].forEach(id => $(id).value = '');
+  $('in-dikbang').value = ''; $('in-asal').value = ''; $('drug-list').innerHTML = '';
+}
+
+async function simpanRekam() {
+  const d = {
+    nama: $('in-nama').value.trim(), nosis: $('in-nosis').value.trim(), dikbang: $('in-dikbang').value.trim(), asal: $('in-asal').value.trim(),
+    keluhan: $('in-keluhan').value.trim(), diagnosa: $('in-diagnosa').value.trim(), keterangan: $('in-ket').value.trim()
+  };
+  if (!d.nama || !d.nosis || !d.dikbang || !d.asal || !d.keluhan || !d.diagnosa) return toast('Lengkapi Nama, Nosis, Dikbang, Asal, Keluhan, dan Diagnosa.', true);
+
+  const obat = [], seen = {};
+  for (const row of document.querySelectorAll('.drug-row')) {
+    const nm = row.querySelector('.d-nama').value.trim(), jml = parseInt(row.querySelector('.d-jml').value, 10), aturan = row.querySelector('.d-aturan').value.trim();
+    if (!nm && !row.querySelector('.d-jml').value) continue;
+    const o = OBAT.find(x => x.nama.toLowerCase() === nm.toLowerCase());
+    if (!o) return toast('Obat "' + nm + '" tidak ada di daftar. Pilih dari saran yang muncul.', true);
+    if (!jml || jml < 1) return toast('Jumlah untuk ' + o.nama + ' belum diisi.', true);
+    if (!aturan) return toast('Aturan pakai untuk ' + o.nama + ' belum diisi (contoh: 3x1).', true);
+    if (seen[o.nama]) return toast(o.nama + ' diinput dua kali. Gabungkan jumlahnya.', true);
+    if (jml > o.stok) return toast('Stok ' + o.nama + ' tidak cukup (sisa ' + o.stok + ').', true);
+    seen[o.nama] = 1; obat.push({nama: o.nama, jumlah: jml, aturan: aturan});
+  }
+  $('btn-simpan').disabled = true;
+  try {
+    await api('saveKunjungan', {data: d, obat});
+    toast('Rekam medis tersimpan.'); resetForm();
+    await reloadObatKunj();
+  } catch (e) { toast(e.message, true); }
+  $('btn-simpan').disabled = false;
+}
+
+/* ================= RIWAYAT ================= */
+function getFiltered() {
+  const a = $('f-dari').value, b = $('f-sampai').value, dk = $('f-dikbang').value;
+  return KUNJ.filter(k => (!a || k.tanggal >= a) && (!b || k.tanggal <= b) && (!dk || k.dikbang === dk))
+    .sort((x, y) => (y.tanggal + y.ts).localeCompare(x.tanggal + x.ts));
+}
+function renderRiwayat() {
+  const rows = getFiltered();
+  const L = ['Tanggal', 'Nama', 'Nosis/Plt/Kompi', 'Dikbang', 'Keluhan', 'Diagnosa', 'Therapi', 'Petugas'];
+  $('tbody-riwayat').innerHTML = rows.length ? rows.map(k => {
+    const v = [fmtTgl(k.tanggal), k.nama, k.nosis, k.dikbang, k.keluhan, k.diagnosa, k.therapi, k.petugas];
+    return '<tr>' + v.map((x, i) => '<td data-label="' + L[i] + '">' + esc(x) + '</td>').join('') +
+      '<td data-label="Aksi"><div class="td-actions"><button class="btn btn-ghost btn-sm" data-edit="' + k.row + '">Edit</button><button class="btn btn-danger btn-sm" data-del="' + k.row + '">Hapus</button></div></td></tr>';
+  }).join('') : '<tr><td colspan="9" class="empty-row">Tidak ada data pada filter ini.</td></tr>';
+}
+function openEdit(row) {
+  const k = KUNJ.find(x => x.row === row); if (!k) return;
+  $('ed-row').value = k.row; $('ed-nama').value = k.nama; $('ed-nosis').value = k.nosis;
+  $('ed-dikbang').value = k.dikbang; $('ed-asal').value = k.asal;
+  $('ed-keluhan').value = k.keluhan; $('ed-diagnosa').value = k.diagnosa; $('ed-therapi').value = k.therapi; $('ed-ket').value = k.ket;
+  $('modal-edit').classList.remove('hidden');
+}
+async function simpanEdit() {
+  const d = {
+    row: +$('ed-row').value, nama: $('ed-nama').value.trim(), nosis: $('ed-nosis').value.trim(), dikbang: $('ed-dikbang').value.trim(), asal: $('ed-asal').value.trim(),
+    keluhan: $('ed-keluhan').value.trim(), diagnosa: $('ed-diagnosa').value.trim(), therapi: $('ed-therapi').value.trim(), keterangan: $('ed-ket').value.trim()
+  };
+  if (!d.nama || !d.dikbang) return toast('Nama dan Dikbang wajib diisi.', true);
+  try {
+    await api('updateKunjungan', {data: d});
+    $('modal-edit').classList.add('hidden'); toast('Perubahan tersimpan.'); await reloadObatKunj();
+  } catch (e) { toast(e.message, true); }
+}
+async function hapusRekam(row) {
+  const k = KUNJ.find(x => x.row === row); if (!k) return;
+  if (!confirm('Hapus rekam medis "' + k.nama + '" tanggal ' + fmtTgl(k.tanggal) + '?\nStok obat tidak dikembalikan otomatis.')) return;
+  try { await api('deleteKunjungan', {row, nama: k.nama, ts: k.ts}); toast('Data dihapus.'); await reloadObatKunj(); }
+  catch (e) { toast(e.message, true); }
+}
+function downloadCSV() {
+  const rows = getFiltered();
+  if (!rows.length) return toast('Tidak ada data untuk diunduh.', true);
+  const cell = v => { let s = String(v == null ? '' : v); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+  const head = ['Tanggal', 'Petugas', 'Nama', 'Nosis', 'Dikbang', 'Asal', 'Keluhan', 'Diagnosa', 'Therapi', 'Keterangan'];
+  const lines = [head.map(cell).join(';')].concat(rows.map(k => [k.tanggal, k.petugas, k.nama, k.nosis, k.dikbang, k.asal, k.keluhan, k.diagnosa, k.therapi, k.ket].map(cell).join(';')));
+  const blob = new Blob(['\uFEFF' + lines.join('\r\n')], {type: 'text/csv;charset=utf-8;'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'Laporan_Kunjungan_' + todayStr() + '.csv'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* ================= STOK OBAT ================= */
+function renderStok() {
+  const lbl = {ok: ['badge-ok', 'Aman'], soon: ['badge-warn', '< 3 Bulan Expired'], expired: ['badge-danger', 'Expired']};
+  $('tbody-stok').innerHTML = OBAT.length ? OBAT.map(o => {
+    const l = lbl[expStatus(o.exp)];
+    return '<tr><td data-label="Kode">' + esc(o.kode) + '</td><td data-label="Nama Obat">' + esc(o.nama) + '</td><td data-label="Kategori">' + esc(o.kategori) +
+      '</td><td data-label="Stok"><b>' + o.stok + '</b></td><td data-label="Satuan">' + esc(o.satuan) + '</td><td data-label="Batas Min.">' + o.min +
+      '</td><td data-label="Tgl Expired">' + fmtTgl(o.exp) + '</td><td data-label="Status"><span><span class="badge ' + l[0] + '">' + l[1] + '</span>' +
+      (o.stok < o.min ? ' <span class="badge badge-warn">Stok menipis</span>' : '') + '</span></td></tr>';
+  }).join('') : '<tr><td colspan="8" class="empty-row">Belum ada data obat.</td></tr>';
+}
+function openObatMasuk() {
+  ['om-nama', 'om-kode', 'om-kategori', 'om-jumlah', 'om-satuan', 'om-min', 'om-exp'].forEach(id => $(id).value = '');
+  $('om-datalist').innerHTML = OBAT.map(o => '<option value="' + esc(o.nama) + '">').join('');
+  $('modal-obat').classList.remove('hidden');
+}
+function prefillObat() {
+  const o = OBAT.find(x => x.nama.toLowerCase() === $('om-nama').value.trim().toLowerCase());
+  if (!o) return;
+  $('om-kode').value = o.kode; $('om-kategori').value = o.kategori; $('om-satuan').value = o.satuan; $('om-min').value = o.min;
+}
+async function simpanObatMasuk() {
+  const d = {
+    nama: $('om-nama').value.trim(), kode: $('om-kode').value.trim(), kategori: $('om-kategori').value.trim(),
+    jumlah: parseInt($('om-jumlah').value, 10), satuan: $('om-satuan').value.trim(), min: parseInt($('om-min').value, 10) || 0, exp: $('om-exp').value
+  };
+  if (!d.nama || !d.jumlah || d.jumlah < 1) return toast('Nama obat dan jumlah masuk wajib diisi.', true);
+  try {
+    const r = await api('addObatMasuk', {data: d});
+    $('modal-obat').classList.add('hidden'); toast(r.message || 'Obat masuk tersimpan.'); await reloadObatKunj();
+  } catch (e) { toast(e.message, true); }
+}
+
+/* ================= KELOLA DIKBANG & ASAL ================= */
+let refType = '';
+function applyRef() {
+  $('dl-dikbang').innerHTML = REF.dikbang.map(v => '<option value="' + esc(v) + '">').join('');
+  $('dl-asal').innerHTML = REF.asal.map(v => '<option value="' + esc(v) + '">').join('');
+  // Filter riwayat: daftar resmi + nilai lama yang masih ada di data
+  const all = Array.from(new Set(REF.dikbang.concat(KUNJ.map(k => k.dikbang).filter(Boolean)))).sort();
+  const cur = $('f-dikbang').value;
+  fillSelect($('f-dikbang'), all, 'Semua Dikbang'); $('f-dikbang').value = cur;
+}
+function openRef(type) {
+  refType = type;
+  $('ref-title').textContent = 'Kelola ' + (type === 'dikbang' ? 'Dikbang' : 'Asal Pengiriman');
+  $('ref-new').value = ''; renderRefList();
+  $('modal-ref').classList.remove('hidden');
+}
+function renderRefList() {
+  const list = REF[refType] || [];
+  $('ref-list').innerHTML = list.length ? list.map((v, i) =>
+    '<div class="ref-item"><span class="ref-name">' + esc(v) + '</span><span class="td-actions">' +
+    '<button class="btn btn-ghost btn-sm" data-ref-edit="' + i + '">Edit</button>' +
+    '<button class="btn btn-danger btn-sm" data-ref-del="' + i + '">Hapus</button></span></div>'
+  ).join('') : '<div class="notif-empty" style="padding:12px">Belum ada data.</div>';
+}
+async function tambahRef() {
+  const v = $('ref-new').value.trim();
+  if (!v) return toast('Ketik nama terlebih dahulu.', true);
+  try {
+    const r = await api('addRef', {type: refType, nama: v});
+    REF[refType] = r.list; $('ref-new').value = ''; applyRef(); renderRefList(); toast('Ditambahkan.');
+  } catch (e) { toast(e.message, true); }
+}
+document.querySelectorAll('[data-kelola]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openRef(b.dataset.kelola); }));
+$('btn-ref-add').addEventListener('click', tambahRef);
+$('ref-new').addEventListener('keydown', e => { if (e.key === 'Enter') tambahRef(); });
+$('ref-list').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const list = REF[refType], d = b.dataset;
+  if (d.refEdit !== undefined) {
+    const row = b.closest('.ref-item');
+    row.innerHTML = '<input class="ref-edit-input" value="' + esc(list[+d.refEdit]) + '"><span class="td-actions">' +
+      '<button class="btn btn-teal btn-sm" data-ref-save="' + d.refEdit + '">Simpan</button>' +
+      '<button class="btn btn-ghost btn-sm" data-ref-cancel="1">Batal</button></span>';
+    row.querySelector('input').focus();
+  } else if (d.refCancel) {
+    renderRefList();
+  } else if (d.refSave !== undefined) {
+    const lama = list[+d.refSave], baru = b.closest('.ref-item').querySelector('input').value.trim();
+    if (!baru) return toast('Nama tidak boleh kosong.', true);
+    if (baru === lama) return renderRefList();
+    try {
+      await api('renameRef', {type: refType, lama, baru});
+      await reloadObatKunj(); renderRefList(); toast('Nama diubah, riwayat lama ikut disesuaikan.');
+    } catch (err) { toast(err.message, true); }
+  } else if (d.refDel !== undefined) {
+    const nama = list[+d.refDel];
+    if (!confirm('Hapus "' + nama + '" dari daftar?\nRiwayat lama yang memakai nama ini tetap tersimpan.')) return;
+    try {
+      const r = await api('deleteRef', {type: refType, nama});
+      REF[refType] = r.list; applyRef(); renderRefList(); toast('Dihapus dari daftar.');
+    } catch (err) { toast(err.message, true); }
+  }
+});
+
+/* ================= EVENT & INISIALISASI ================= */
+document.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
+document.querySelectorAll('.btn-logout').forEach(b => b.addEventListener('click', () => logout()));
+document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => $(b.dataset.close).classList.add('hidden')));
+document.querySelectorAll('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m) m.classList.add('hidden'); }));
+$('btn-login').addEventListener('click', doLogin);
+['login-user', 'login-pass'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); }));
+$('btn-add-drug').addEventListener('click', addDrugRow);
+$('btn-reset').addEventListener('click', resetForm);
+$('btn-simpan').addEventListener('click', simpanRekam);
+['f-dari', 'f-sampai', 'f-dikbang'].forEach(id => $(id).addEventListener('change', renderRiwayat));
+$('btn-csv').addEventListener('click', downloadCSV);
+$('tbody-riwayat').addEventListener('click', e => {
+  const ed = e.target.closest('[data-edit]'), dl = e.target.closest('[data-del]');
+  if (ed) openEdit(+ed.dataset.edit); if (dl) hapusRekam(+dl.dataset.del);
+});
+$('btn-edit-simpan').addEventListener('click', simpanEdit);
+$('btn-obat-masuk').addEventListener('click', openObatMasuk);
+$('om-nama').addEventListener('change', prefillObat);
+$('btn-obat-simpan').addEventListener('click', simpanObatMasuk);
+
+/* ================= KELOLA AKUN (ADMIN) ================= */
+let USERS = [], akunMode = 'add';
+async function loadUsers() {
+  try { const r = await api('listUsers'); USERS = r.data; renderUsers(); }
+  catch (e) { toast(e.message, true); }
+}
+function renderUsers() {
+  const me = (session && session.username || '').toLowerCase();
+  $('tbody-akun').innerHTML = USERS.length ? USERS.map(u => {
+    const isMe = u.username.toLowerCase() === me, nm = esc(u.username);
+    return '<tr><td data-label="Username"><b>' + nm + '</b></td><td data-label="Nama Petugas">' + esc(u.nama) +
+      '</td><td data-label="Peran"><span class="badge ' + (u.role === 'admin' ? 'badge-ok' : 'badge-role') + '">' + (u.role === 'admin' ? 'Admin' : 'Petugas') + '</span></td>' +
+      '<td data-label="Aksi"><div class="td-actions"><button class="btn btn-ghost btn-sm" data-uedit="' + nm + '">Edit</button>' +
+      (isMe ? '<span class="page-sub" style="align-self:center">Akun Anda</span>' : '<button class="btn btn-danger btn-sm" data-udel="' + nm + '">Hapus</button>') + '</div></td></tr>';
+  }).join('') : '<tr><td colspan="4" class="empty-row">Belum ada akun.</td></tr>';
+}
+function openAkun(mode, username) {
+  akunMode = mode;
+  const u = USERS.find(x => x.username === username) || {};
+  $('ak-title').textContent = mode === 'add' ? 'Tambah Akun' : 'Edit Akun: ' + username;
+  $('ak-user').value = u.username || ''; $('ak-user').readOnly = mode === 'edit';
+  $('ak-pass').value = ''; $('ak-pass').type = 'password';
+  $('ak-pass').placeholder = mode === 'add' ? 'Minimal 6 karakter' : 'Kosongkan jika tidak diganti';
+  $('ak-pass-label').textContent = mode === 'add' ? 'Password' : 'Ganti password (opsional)';
+  $('ak-nama').value = u.nama || ''; $('ak-role').value = u.role || 'petugas';
+  $('modal-akun').classList.remove('hidden');
+}
+async function simpanAkun() {
+  const d = {username: $('ak-user').value.trim(), password: $('ak-pass').value, nama: $('ak-nama').value.trim(), role: $('ak-role').value};
+  if (!d.username || !d.nama) return toast('Username dan nama petugas wajib diisi.', true);
+  if (akunMode === 'add' && !d.password) return toast('Password wajib diisi.', true);
+  $('btn-akun-save').disabled = true;
+  try {
+    await api(akunMode === 'add' ? 'addUser' : 'updateUser', d);
+    $('modal-akun').classList.add('hidden'); toast(akunMode === 'add' ? 'Akun ditambahkan.' : 'Akun diperbarui.'); await loadUsers();
+  } catch (e) { toast(e.message, true); }
+  $('btn-akun-save').disabled = false;
+}
+$('btn-akun-add').addEventListener('click', () => openAkun('add'));
+$('btn-akun-save').addEventListener('click', simpanAkun);
+$('tbody-akun').addEventListener('click', async e => {
+  const ed = e.target.closest('[data-uedit]'), dl = e.target.closest('[data-udel]');
+  if (ed) return openAkun('edit', ed.dataset.uedit);
+  if (!dl) return;
+  const uname = dl.dataset.udel;
+  if (!confirm('Hapus akun "' + uname + '"?\nAkun ini tidak akan bisa login lagi. Riwayat pasien tetap ada.')) return;
+  try { await api('deleteUser', {username: uname}); toast('Akun dihapus.'); await loadUsers(); }
+  catch (e2) { toast(e2.message, true); }
+});
+
+/* ================= TEMA, REFRESH, LIHAT PASSWORD ================= */
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t; store.set('bsimedis_theme', t);
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = t === 'dark' ? '#0e1a2b' : '#1A365D';
+}
+async function refreshAll() { await loadAll(); if (!$('page-akun').classList.contains('hidden')) loadUsers(); }
+document.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.act === 'theme') { applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); if (session) renderDashboard(); }
+  else refreshAll();
+}));
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-eye]'); if (!b) return;
+  const i = $(b.dataset.eye); i.type = i.type === 'password' ? 'text' : 'password';
+});
+
+/* ================= BERANDA MOBILE ================= */
+function updateHome() {
+  if (!session) return;
+  $('desk-date').textContent = new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+  $('hero-nama').textContent = 'Halo, ' + session.nama;
+  $('hero-sub').textContent = 'Klinik Pusdik Brimob · ' + new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long'});
+  $('tile-alert').textContent = OBAT.filter(o => o.stok < o.min).length + OBAT.filter(o => o.exp && expStatus(o.exp) !== 'ok').length;
+}
+const _renderDashboard = renderDashboard;
+renderDashboard = function () { _renderDashboard(); updateHome(); };
+document.querySelectorAll('[data-scroll]').forEach(b => b.addEventListener('click', () => { const el = $(b.dataset.scroll); if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'}); }));
+
+(function init() {
+  try { session = JSON.parse(store.get(LS_KEY) || 'null'); } catch (e) { session = null; }
+  if (session && session.token && session.nama) enterApp();
+  else { session = null; $('view-login').classList.remove('hidden'); }
+})();
+</script>
+<script>
+/* PWA: daftar service worker dan tombol "Pasang Aplikasi" */
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+var deferredInstall = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault(); deferredInstall = e;
+  document.getElementById('btn-install').classList.remove('hidden');
+});
+document.getElementById('btn-install').addEventListener('click', function () {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.finally(function () { deferredInstall = null; document.getElementById('btn-install').classList.add('hidden'); });
+});
+window.addEventListener('appinstalled', function () { document.getElementById('btn-install').classList.add('hidden'); });
+</script>
+</body>
+</html>
